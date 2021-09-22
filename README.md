@@ -1,1 +1,0 @@
-# Monitoramento_GTMAX_GT4
