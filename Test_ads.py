@@ -1,14 +1,14 @@
 import board
 import busio
-import adafruit_ads1x15.ads1115 as ADS
+import adafruit_ads1x15.ads1115 as ADS    # Biblioteca ADS1115
 import time as t
 import csv
 import datetime as dt
-from adafruit_ads1x15.analog_in import AnalogIn
+from adafruit_ads1x15.analog_in import AnalogIn  # Leitura de entrada analogica
 
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = busio.I2C(board.SCL, board.SDA)    #Comunicacao I2C
 ads = ADS.ADS1115(i2c)
-ads.data_rate= 860
+ads.data_rate= 860      #Frequencia de amostragem
 
 date= dt.date.today().strftime("%d_%m_%Y")
 file_number= 0
@@ -53,6 +53,8 @@ try:
     file.flush()
     
     while True:
+
+        # Payload: Tempo de impressao, Valor em bits das entradas analogicas , Valor de tensão das entradas analogicas   
         data= [time(),
                analog_A1().value, analog_A1().voltage,
                analog_A1().value, analog_A1().voltage,
@@ -70,6 +72,8 @@ try:
         file.flush()
         
         #t.sleep(1)
+
+# Ctrl + C p/ finalizar a leitura de dados
 except KeyboardInterrupt:
     for i in range(len(data)):
         data[i]= "END"
