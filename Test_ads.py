@@ -8,7 +8,8 @@ from adafruit_ads1x15.analog_in import AnalogIn
 
 i2c = busio.I2C(board.SCL, board.SDA)
 ads = ADS.ADS1115(i2c)
-   
+ads.data_rate= 860
+
 date= dt.date.today().strftime("%d_%m_%Y")
 file_number= 0
 f= "./dados_csv/Impressao_{}.csv".format(date)
@@ -23,7 +24,7 @@ while True:
 
 writer= csv.writer(file)
 
-data= ["Data","Tempo",
+data= ["Tempo",
        "Valor A0 bits","Valor A0 Volts",
        "Valor A1 bits","Valor A1 Volts",
        "Valor A2 bits","Valor A2 Volts",
@@ -52,29 +53,23 @@ try:
     file.flush()
     
     while True:
-        data= [date,time(),
-               analog_A0().value, analog_A0().voltage,
+        data= [time(),
+               analog_A1().value, analog_A1().voltage,
                analog_A1().value, analog_A1().voltage,
                analog_A2().value, analog_A2().voltage,
                analog_A3().value, analog_A3().voltage ]
         
+    
+        print('A0: ',analog_A0().voltage,
+              'A1: ',analog_A1().voltage,
+              'A2: ',analog_A2().voltage,
+              'A3: ',analog_A0().voltage, end='\r')
         
-        analog_value = AnalogIn(ads, ADS.P0)
-        print('A0: ',analog_value.value, analog_value.voltage)
-        
-        analog_value = AnalogIn(ads, ADS.P1)
-        print('A1: ',analog_value.value, analog_value.voltage)
-        
-        analog_value = AnalogIn(ads, ADS.P2)
-        print('A2: ',analog_value.value, analog_value.voltage)
-        
-        analog_value = AnalogIn(ads, ADS.P3)
-        print('A3: ',analog_value.value, analog_value.voltage, '\n')
         
         writer.writerow(data)
         file.flush()
         
-        t.sleep(1)
+        #t.sleep(1)
 except KeyboardInterrupt:
     for i in range(len(data)):
         data[i]= "END"
